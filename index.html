@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الشياكة - للأثواب الرجالية الفاخرة | Al Sheyaka</title>
+    <meta name="description"
+        content="اكتشف الفخامة والأناقة مع الشياكة. أرقى الأثواب والجلابيات الرجالية المصممة بأعلى جودة.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;700;900&family=Outfit:wght@100;300;400;600;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <!-- Background Brand Logo -->
+    <div class="fixed-bg-logo">
+        <img src="assets/logo.png" alt="Background Brand">
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Header / Navigation -->
+    <header class="navbar">
+        <div class="container">
+            <div class="nav-links">
+                <a href="#hero">الرئيسية</a>
+                <a href="#collections">المكتشف</a>
+                <a href="#about">قصتنا</a>
+                <a href="#contact">اتصل بنا</a>
+            </div>
+            <div class="logo">
+                <img src="assets/logo.png" alt="Al Sheyaka Logo">
+            </div>
+            <div class="nav-actions">
+                <button class="search-btn"><i data-lucide="search"></i></button>
+                <button class="cart-btn">
+                    <i data-lucide="shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </button>
+                <div class="menu-toggle"><i data-lucide="menu"></i></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="hero">
+        <div class="hero-bg">
+            <img src="assets/hero.png" alt="Luxury Galabeya">
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <span class="badge">مجموعة 2026 الحصرية</span>
+                <h1 class="reveal-text">جوهر <span class="accent">الفخامة</span> في كل تفصيل</h1>
+                <p>نصنع الأناقة من أجود أنواع الأقمشة العالمية، لتناسب ذوقك الرفيع في كل مناسبة.</p>
+                <div class="hero-btns">
+                    <a href="#collections" class="btn btn-primary">تسوق المجموعة</a>
+                    <a href="#about" class="btn btn-outline">اكتشف المزيد</a>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse"></div>
+            <span>انزل للأسفل</span>
+        </div>
+    </section>
+
+    <!-- Stats / Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card">
+                    <i data-lucide="award"></i>
+                    <h3>جودة استثنائية</h3>
+                    <p>نستخدم أرقى أنواع الأقطان والأقمشة الإيطالية واليابانية.</p>
+                </div>
+                <div class="feature-card">
+                    <i data-lucide="scissors"></i>
+                    <h3>خياطة يدوية</h3>
+                    <p>دقة متناهية في التفصيل على أيدي أمهر الخياطين المحترفين.</p>
+                </div>
+                <div class="feature-card">
+                    <i data-lucide="truck"></i>
+                    <h3>توصيل سريع</h3>
+                    <p>نصل إليك أينما كنت مع خدمة التغليف الفاخر للهدايا.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Collections Section -->
+    <section id="collections" class="collections">
+        <div class="container">
+            <div class="section-title">
+                <h2>مجموعاتنا المختارة</h2>
+                <p>تصفح أرقى التصاميم التي تجمع بين التراث والعصرية</p>
+            </div>
+            <div class="product-grid">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="assets/product1.png" alt="Al Sheyaka Classic">
+                        <div class="product-overlay">
+                            <button class="btn-icon"><i data-lucide="eye"></i></button>
+                            <button class="btn-icon add-to-cart"><i data-lucide="plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>ثوب الشياكة كلاسيك - ملكي</h3>
+                        <p class="price">850 ر.س</p>
+                    </div>
+                </div>
+                <!-- Product 2 (Dummy) -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="assets/product1.png" alt="Modern Chic"
+                            style="filter: brightness(0.8) hue-rotate(45deg);">
+                        <div class="product-overlay">
+                            <button class="btn-icon"><i data-lucide="eye"></i></button>
+                            <button class="btn-icon add-to-cart"><i data-lucide="plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>ثوب مودرن - رمادي فحمي</h3>
+                        <p class="price">720 ر.س</p>
+                    </div>
+                </div>
+                <!-- Product 3 (Dummy) -->
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="assets/product1.png" alt="Summer Collection"
+                            style="filter: brightness(1.2) sepia(0.3);">
+                        <div class="product-overlay">
+                            <button class="btn-icon"><i data-lucide="eye"></i></button>
+                            <button class="btn-icon add-to-cart"><i data-lucide="plus"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3>ثوب صيفي - أبيض ناصع</h3>
+                        <p class="price">590 ر.س</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials / Experience -->
+    <section class="experience">
+        <div class="experience-overlay"></div>
+        <div class="container">
+            <div class="experience-content">
+                <h2>تجربة لا تُنسى</h2>
+                <blockquote class="reveal-text">
+                    "الشياكة ليست مجرد اسم، بل هي أسلوب حياة. الجودة في الملمس والجمال في المنظر جعلتني زبوناً دائماً."
+                </blockquote>
+                <p class="author">- فيصل القرني</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <img src="assets/logo.png" alt="Al Sheyaka Logo" class="footer-logo">
+                    <p>نحن نؤمن بأن الأناقة تبدأ من الداخل، ونكسو هذا الجمال بأرقى الأثواب العربية.</p>
+                </div>
+                <div class="footer-links">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="#">المتجر الإلكتروني</a></li>
+                        <li><a href="#">سياسة الإرجاع</a></li>
+                        <li><a href="#">جدول المقاسات</a></li>
+                        <li><a href="#">فروعنا</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>تواصل معنا</h4>
+                    <p><i data-lucide="map-pin"></i> الرياض، المملكة العربية السعودية</p>
+                    <p><i data-lucide="phone"></i> +966 50 000 0000</p>
+                    <p><i data-lucide="mail"></i> info@alsheyaka.com</p>
+                    <div class="social-links">
+                        <a href="#"><i data-lucide="instagram"></i></a>
+                        <a href="#"><i data-lucide="twitter"></i></a>
+                        <a href="#"><i data-lucide="facebook"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 الشياكة للأثواب الفاخرة. جميع الحقوق محفوظة.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="index.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
