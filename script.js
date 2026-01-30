@@ -109,10 +109,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // WhatsApp Ordering Function
     window.orderWhatsApp = (name, imgSrc) => {
         const phone = "201220189879";
-        const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '').replace(/\/$/, '');
-        // Pathing is now relative to root
-        const fullImgUrl = baseUrl + '/' + imgSrc;
-        const message = `مرحباً الشياكة، أود الاستفسار عن: ${name}\n${fullImgUrl}`;
+
+        // Improve URL construction
+        let fullImgUrl = "";
+        if (window.location.protocol === 'file:') {
+            // Local file mode - just send the name because local links won't preview
+            fullImgUrl = "(رابط الصورة متاح عند رفع الموقع على الإنترنت)";
+        } else {
+            const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '').replace(/\/$/, '');
+            fullImgUrl = baseUrl + '/' + imgSrc;
+        }
+
+        const message = `✨ *طلب استفسار جديد* ✨\n\n` +
+            `👕 *المنتج:* ${name}\n` +
+            `🔗 *رابط المعاينة:* ${fullImgUrl}\n\n` +
+            `مرحبا "الشياكة"، أريد الاستفسار عن تفاصيل هذا الموديل.`;
+
         const encodedMsg = encodeURIComponent(message);
         window.open(`https://wa.me/${phone}?text=${encodedMsg}`, '_blank');
     };
