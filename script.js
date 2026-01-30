@@ -110,20 +110,20 @@ document.addEventListener('DOMContentLoaded', () => {
     window.orderWhatsApp = (name, imgSrc) => {
         const phone = "201220189879";
 
-        // Improve URL construction
+        // Ensure the image path is URL-safe (encodes spaces and special characters)
+        const safeImgSrc = encodeURI(imgSrc);
+
+        // Construct the full URL
         let fullImgUrl = "";
         if (window.location.protocol === 'file:') {
-            // Local file mode - just send the name because local links won't preview
             fullImgUrl = "(رابط الصورة متاح عند رفع الموقع على الإنترنت)";
         } else {
             const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '').replace(/\/$/, '');
-            fullImgUrl = baseUrl + '/' + imgSrc;
+            fullImgUrl = baseUrl + '/' + safeImgSrc;
         }
 
-        const message = `✨ *طلب استفسار جديد* ✨\n\n` +
-            `👕 *المنتج:* ${name}\n` +
-            `🔗 *رابط المعاينة:* ${fullImgUrl}\n\n` +
-            `مرحبا "الشياكة"، أريد الاستفسار عن تفاصيل هذا الموديل.`;
+        // Simpler format as requested by the user
+        const message = `مرحباً الشياكة، أود الاستفسار عن: ${name}\n${fullImgUrl}`;
 
         const encodedMsg = encodeURIComponent(message);
         window.open(`https://wa.me/${phone}?text=${encodedMsg}`, '_blank');
