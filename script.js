@@ -263,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
             closeAdminModals();
         } catch (error) {
             console.error("Error adding product:", error);
-            alert('حدث خطأ أثناء الإضافة');
+            alert('خطأ في الرفع: ' + error.message);
             addBtn.innerHTML = 'إضافة الموديل';
             addBtn.disabled = false;
         }
@@ -287,12 +287,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // WhatsApp Ordering Function
     window.orderWhatsApp = (name, imgSrc) => {
         const phone = "201220189879";
-
-        // If it's a data URL (Base64), we can't send the full URL but we can mention it
         let message = "";
-        if (imgSrc.startsWith('data:')) {
-            message = `مرحباً الشياكة، أود الاستفسار عن الموديل: ${name}\n(صورة مرفقة لدى العميل)`;
+
+        // Handle Firebase Storage URLs or local paths
+        if (imgSrc.startsWith('http')) {
+            // It's a Firebase Storage URL (or other remote URL)
+            message = `مرحباً مصنع الربيع، أود الاستفسار عن الموديل: ${name}\n${imgSrc}`;
+        } else if (imgSrc.startsWith('data:')) {
+            // It's a Base64 image
+            message = `مرحباً مصنع الربيع، أود الاستفسار عن الموديل: ${name}\n(صورة مرفقة لدى العميل)`;
         } else {
+            // It's a local file path
             const safeImgSrc = encodeURI(imgSrc);
             let fullImgUrl = "";
             if (window.location.protocol === 'file:') {
@@ -301,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '').replace(/\/$/, '');
                 fullImgUrl = baseUrl + '/' + safeImgSrc;
             }
-            message = `مرحباً الشياكة، أود الاستفسار عن: ${name}\n${fullImgUrl}`;
+            message = `مرحباً مصنع الربيع، أود الاستفسار عن: ${name}\n${fullImgUrl}`;
         }
 
         const encodedMsg = encodeURIComponent(message);
