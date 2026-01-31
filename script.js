@@ -96,6 +96,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Firebase Configuration ---
+    const firebaseConfig = {
+        apiKey: "AIzaSyBnaCO886pZQWvmFS8DKrqC1jqDrdT9_CM",
+        authDomain: "siond-a6c34.firebaseapp.com",
+        projectId: "siond-a6c34",
+        storageBucket: "siond-a6c34.firebasestorage.app",
+        messagingSenderId: "875547108455",
+        appId: "1:875547108455:web:693bd7cfd119debf9be0c2",
+        measurementId: "G-ZSCLYKRJQ4"
+    };
+
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+
     // Navbar scroll effect
     window.addEventListener('scroll', () => {
         const nav = document.querySelector('.navbar');
@@ -106,24 +124,185 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- Admin Panel Logic ---
+    const adminLoginTrigger = document.getElementById('admin-login-trigger');
+    const adminLoginModal = document.getElementById('admin-login-modal');
+    const adminPanelModal = document.getElementById('admin-panel-modal');
+    const loginError = document.getElementById('login-error');
+    const adminPasswordInput = document.getElementById('admin-password');
+
+    const adminPassword = "010qw";
+
+    if (adminLoginTrigger) {
+        adminLoginTrigger.addEventListener('click', () => {
+            if (sessionStorage.getItem('isAdmin')) {
+                adminPanelModal.classList.add('active');
+            } else {
+                adminLoginModal.classList.add('active');
+            }
+        });
+    }
+
+    window.closeAdminModals = () => {
+        adminLoginModal.classList.remove('active');
+        adminPanelModal.classList.remove('active');
+        loginError.style.display = 'none';
+        renderDynamicProducts();
+    };
+
+    window.checkAdminPassword = () => {
+        if (adminPasswordInput.value === adminPassword) {
+            sessionStorage.setItem('isAdmin', 'true');
+            adminLoginModal.classList.remove('active');
+            adminPanelModal.classList.add('active');
+            adminPasswordInput.value = '';
+            renderDynamicProducts();
+        } else {
+            loginError.style.display = 'block';
+        }
+    };
+
+    window.logoutAdmin = () => {
+        sessionStorage.removeItem('isAdmin');
+        closeAdminModals();
+        renderDynamicProducts();
+    };
+
+    // Load and Render Dynamic Products
+    const renderDynamicProducts = async () => {
+        const categories = {
+            'collection-grid': [],
+            'thobe-arabi-grid': [],
+            'thobe-shaarawy-grid': [],
+            'thobe-wool-grid': []
+        };
+
+        try {
+            const snapshot = await db.collection('products').orderBy('createdAt', 'desc').get();
+            snapshot.forEach(doc => {
+                const prod = doc.data();
+                if (categories[prod.category]) {
+                    categories[prod.category].push({ id: doc.id, ...prod });
+                }
+            });
+
+            Object.keys(categories).forEach(catId => {
+                const grid = document.getElementById(catId);
+                if (!grid) return;
+
+                // Remove previous dynamic items
+                grid.querySelectorAll('.dynamic-product').forEach(el => el.remove());
+
+                categories[catId].forEach(prod => {
+                    const card = document.createElement('div');
+                    card.className = 'product-card dynamic-product';
+                    card.innerHTML = `
+                        <div class="product-img-container" onclick="orderWhatsApp('${prod.name}', '${prod.img}')">
+                            <img src="${prod.img}" class="product-img" alt="${prod.name}">
+                        </div>
+                        <div class="product-info">
+                            <h3>${prod.name}</h3>
+                            ${prod.specs ? `
+                            <ul class="product-specs-list">
+                                ${prod.specs.split('\n').filter(s => s.trim()).map(s => `<li><i class="fa-solid fa-check"></i> ${s}</li>`).join('')}
+                            </ul>
+                            ` : ''}
+                            <a href="#" onclick="orderWhatsApp('${prod.name}', '${prod.img}')" class="whatsapp-order-btn">
+                                <i class="fa-brands fa-whatsapp"></i> اطلب الآن
+                            </a>
+                            ${sessionStorage.getItem('isAdmin') ? `
+                            <button class="delete-product-btn" onclick="deleteProduct('${prod.id}')">حذف الموديل</button>
+                            ` : ''}
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            });
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
+    };
+
+    window.addNewModel = async () => {
+        const name = document.getElementById('model-name').value;
+        const specs = document.getElementById('model-specs').value;
+        const category = document.getElementById('model-category').value;
+        const imgFile = document.getElementById('model-image').files[0];
+        const addBtn = document.querySelector('#admin-panel-modal .btn-primary');
+
+        if (!name || !imgFile) {
+            alert('يرجى إدخال اسم الموديل واختيار صورة');
+            return;
+        }
+
+        try {
+            addBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> جاري الرفع...';
+            addBtn.disabled = true;
+
+            const fileName = Date.now() + "_" + imgFile.name;
+            const storageRef = storage.ref('products/' + fileName);
+            const uploadTask = await storageRef.put(imgFile);
+            const downloadURL = await uploadTask.ref.getDownloadURL();
+
+            await db.collection('products').add({
+                name,
+                specs,
+                category,
+                img: downloadURL,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            alert('تم إضافة الموديل بنجاح');
+            document.getElementById('model-name').value = '';
+            document.getElementById('model-specs').value = '';
+            document.getElementById('model-image').value = '';
+            addBtn.innerHTML = 'إضافة الموديل';
+            addBtn.disabled = false;
+
+            renderDynamicProducts();
+            closeAdminModals();
+        } catch (error) {
+            console.error("Error adding product:", error);
+            alert('حدث خطأ أثناء الإضافة');
+            addBtn.innerHTML = 'إضافة الموديل';
+            addBtn.disabled = false;
+        }
+    };
+
+    window.deleteProduct = async (id) => {
+        if (confirm('هل أنت متأكد من حذف هذا الموديل؟')) {
+            try {
+                await db.collection('products').doc(id).delete();
+                renderDynamicProducts();
+            } catch (error) {
+                console.error("Error deleting product:", error);
+                alert('حدث خطأ أثناء الحذف');
+            }
+        }
+    };
+
+    // Initial Render
+    renderDynamicProducts();
+
     // WhatsApp Ordering Function
     window.orderWhatsApp = (name, imgSrc) => {
         const phone = "201220189879";
 
-        // Ensure the image path is URL-safe (encodes spaces and special characters)
-        const safeImgSrc = encodeURI(imgSrc);
-
-        // Construct the full URL
-        let fullImgUrl = "";
-        if (window.location.protocol === 'file:') {
-            fullImgUrl = "(رابط الصورة متاح عند رفع الموقع على الإنترنت)";
+        // If it's a data URL (Base64), we can't send the full URL but we can mention it
+        let message = "";
+        if (imgSrc.startsWith('data:')) {
+            message = `مرحباً الشياكة، أود الاستفسار عن الموديل: ${name}\n(صورة مرفقة لدى العميل)`;
         } else {
-            const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '').replace(/\/$/, '');
-            fullImgUrl = baseUrl + '/' + safeImgSrc;
+            const safeImgSrc = encodeURI(imgSrc);
+            let fullImgUrl = "";
+            if (window.location.protocol === 'file:') {
+                fullImgUrl = "(رابط الصورة متاح عند رفع الموقع على الإنترنت)";
+            } else {
+                const baseUrl = window.location.origin + window.location.pathname.replace('index.html', '').replace(/\/$/, '');
+                fullImgUrl = baseUrl + '/' + safeImgSrc;
+            }
+            message = `مرحباً الشياكة، أود الاستفسار عن: ${name}\n${fullImgUrl}`;
         }
-
-        // Simpler format as requested by the user
-        const message = `مرحباً الشياكة، أود الاستفسار عن: ${name}\n${fullImgUrl}`;
 
         const encodedMsg = encodeURIComponent(message);
         window.open(`https://wa.me/${phone}?text=${encodedMsg}`, '_blank');

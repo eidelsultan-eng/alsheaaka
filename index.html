@@ -11,6 +11,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -76,7 +82,7 @@
                 <p>مجموعة حصرية من الأثواب الرجالية الفاخرة - اطلب التفاصيل عبر واتساب</p>
             </div>
 
-            <div class="products-grid">
+            <div class="products-grid" id="collection-grid">
                 <!-- Product 1 -->
                 <div class="product-card">
                     <div class="product-img-container" onclick="orderWhatsApp('ثوب فاخر - موديل 1', 'p1.jpg')">
@@ -250,7 +256,7 @@
                 <p>تشكيلة استثنائية من الثوب العربي بتصاميم عصرية وتقفيل فاخر</p>
             </div>
 
-            <div class="products-grid">
+            <div class="products-grid" id="thobe-arabi-grid">
                 <!-- Product WhatsApp 1 -->
                 <div class="product-card">
                     <div class="product-img-container"
@@ -828,7 +834,7 @@
                 <p>تميز بالفخامة والأناقة مع أحدث تصاميم ثوب شعراوي الحصرية</p>
             </div>
 
-            <div class="products-grid">
+            <div class="products-grid" id="thobe-shaarawy-grid">
                 <!-- Product Shaarawy 1 -->
                 <div class="product-card">
                     <div class="product-img-container"
@@ -1098,7 +1104,7 @@
                 <p>روعة لا مثيل لها - تشكيلة تجمع بين فخامة الصوف الإنجليزي واللمسة المغربية</p>
             </div>
 
-            <div class="products-grid">
+            <div class="products-grid" id="thobe-wool-grid">
                 <!-- Product Wool 1 -->
                 <div class="product-card">
                     <div class="product-img-container"
@@ -1274,10 +1280,11 @@
             </div>
             <div class="footer-contact">
                 <h4>تواصل معنا</h4>
-                <p><i class="fa-solid fa-location-dot"></i> المملكة العربية السعودية، الرياض</p>
+                <p><i class="fa-solid fa-location-dot"></i> المنوفية، أشمون</p>
                 <p><i class="fa-solid fa-phone"></i> <a href="tel:+201220189879"
                         style="color: inherit; text-decoration: none;">+20 122 018 9879</a></p>
                 <p><i class="fa-solid fa-envelope"></i> info@alshayaka.com</p>
+                <span class="admin-login-btn" id="admin-login-trigger">لوحة التحكم</span>
             </div>
         </div>
         <div class="footer-bottom">
@@ -1304,6 +1311,64 @@
         </div>
     </div>
     <div id="overlay" class="overlay"></div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="admin-modal">
+        <div class="admin-modal-content">
+            <span class="close-admin-modal" onclick="closeAdminModals()">&times;</span>
+            <div class="admin-header">
+                <h2>تسجيل دخول المسؤول</h2>
+                <p>أدخل كلمة المرور للوصول إلى لوحة التحكم</p>
+            </div>
+            <div class="admin-form">
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="admin-password" placeholder="••••••">
+                </div>
+                <button class="btn btn-primary full-width" onclick="checkAdminPassword()">دخول</button>
+                <p id="login-error" style="color: red; margin-top: 10px; display: none; text-align: center;">كلمة المرور
+                    غير صحيحة</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Control Panel Modal -->
+    <div id="admin-panel-modal" class="admin-modal">
+        <div class="admin-modal-content" style="max-width: 600px;">
+            <span class="close-admin-modal" onclick="closeAdminModals()">&times;</span>
+            <div class="admin-header">
+                <h2>إضافة موديل جديد</h2>
+                <p>قم برفع الصورة وإدخال المواصفات</p>
+            </div>
+            <div class="admin-form">
+                <div class="form-group">
+                    <label>صورة الموديل</label>
+                    <input type="file" id="model-image" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>اسم الموديل</label>
+                    <input type="text" id="model-name" placeholder="مثال: ثوب فاخر - موديل 50">
+                </div>
+                <div class="form-group">
+                    <label>نوع القماش / المواصفات</label>
+                    <textarea id="model-specs" rows="3" placeholder="مثال: قطن طبيعي، تطريز يدوي..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>قسم الموديل</label>
+                    <select id="model-category">
+                        <option value="collection-grid">التشكيلة الجديدة</option>
+                        <option value="thobe-arabi-grid">الثوب العربي</option>
+                        <option value="thobe-shaarawy-grid">ثوب شعراوي</option>
+                        <option value="thobe-wool-grid">صوف إنجليزي</option>
+                    </select>
+                </div>
+                <div class="admin-btns">
+                    <button class="btn btn-primary full-width" onclick="addNewModel()">إضافة الموديل</button>
+                    <button class="btn btn-outline full-width" onclick="logoutAdmin()">تسجيل خروج</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

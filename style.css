@@ -865,3 +865,136 @@ footer {
     opacity: 0;
     pointer-events: none;
 }
+
+/* Admin Panel Styles */
+.admin-login-btn {
+    opacity: 0.5;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: var(--transition);
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.admin-login-btn:hover {
+    opacity: 1;
+    color: var(--accent);
+}
+
+.admin-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    backdrop-filter: blur(8px);
+}
+
+.admin-modal.active {
+    display: flex;
+}
+
+.admin-modal-content {
+    background: #fff;
+    padding: 40px;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    color: #333;
+    text-align: right;
+}
+
+.admin-header {
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.admin-header h2 {
+    color: var(--primary);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.admin-form .form-group {
+    margin-bottom: 20px;
+}
+
+.admin-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
+}
+
+.admin-form input,
+.admin-form select,
+.admin-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    font-family: 'Cairo', sans-serif;
+    transition: var(--transition);
+    font-size: 1rem;
+}
+
+.admin-form input:focus {
+    border-color: var(--accent);
+    outline: none;
+}
+
+.admin-btns {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.product-specs-list {
+    font-size: 0.85rem;
+    color: #666;
+    margin: 10px 0;
+    padding: 0;
+    list-style: none;
+}
+
+.product-specs-list li {
+    margin-bottom: 4px;
+}
+
+.product-specs-list i {
+    color: var(--accent);
+    margin-left: 5px;
+}
+
+.delete-product-btn {
+    background: #ff4757;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    margin-top: 15px;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+.delete-product-btn:hover {
+    background: #ff2e44;
+}
+
+.close-admin-modal {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #999;
+}
